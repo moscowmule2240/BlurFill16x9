@@ -4,7 +4,7 @@ from PIL import Image, ImageFilter
 import shutil
 
 
-def convert_to_16_9_blur_bg(input_path: Path, output_path: Path, output_format: str = "WEBP", quality: int = 95):
+def convert_to_16_9_blur_bg(input_path: Path, output_path: Path, output_format: str = "PNG", quality: int = 95):
     with Image.open(input_path) as img:
         img = img.convert("RGB")
         original_width, original_height = img.size
@@ -44,7 +44,7 @@ def convert_to_16_9_blur_bg(input_path: Path, output_path: Path, output_format: 
         print(f"✔ Saved: {output_path} (format: {output_format}, quality: {quality if output_format.upper() != 'PNG' else 'lossless'})")
 
 
-def batch_convert_folder(folder_path: str, output_format: str = "WEBP", quality: int = 95):
+def batch_convert_folder(folder_path: str, output_format: str = "PNG", quality: int = 95):
     input_dir = Path(folder_path)
     if not input_dir.is_dir():
         print(f"❌ 指定されたフォルダが存在しません: {folder_path}")
@@ -70,7 +70,7 @@ def batch_convert_folder(folder_path: str, output_format: str = "WEBP", quality:
         "JPEG": ".jpg",
         "WEBP": ".webp"
     }
-    output_ext = format_extensions.get(output_format.upper(), ".webp")
+    output_ext = format_extensions.get(output_format.upper(), ".png")
 
     for image_file in input_dir.glob("**/*"):
         if image_file.suffix.lower() in supported_extensions:
@@ -91,17 +91,17 @@ if __name__ == "__main__":
         print("  python blur_fill_16x9.py <画像フォルダのパス>")
         print("  python blur_fill_16x9.py <画像フォルダのパス> <フォーマット> [品質]")
         print("")
-        print("フォーマット: WEBP (デフォルト・高効率), PNG (ロスレス), JPEG")
+        print("フォーマット: PNG (デフォルト・ロスレス), WEBP (高効率), JPEG")
         print("品質: 1-100 (JPEGとWebPのみ、デフォルト95)")
         print("")
         print("例:")
         print("  python blur_fill_16x9.py ./photos")
-        print("  python blur_fill_16x9.py ./photos PNG")
-        print("  python blur_fill_16x9.py ./photos JPEG 98")
         print("  python blur_fill_16x9.py ./photos WEBP 95")
+        print("  python blur_fill_16x9.py ./photos JPEG 98")
+        print("  python blur_fill_16x9.py ./photos PNG")
     else:
         folder_path = sys.argv[1]
-        output_format = sys.argv[2].upper() if len(sys.argv) > 2 else "WEBP"
+        output_format = sys.argv[2].upper() if len(sys.argv) > 2 else "PNG"
         quality = int(sys.argv[3]) if len(sys.argv) > 3 else 95
 
         # フォーマット検証
